@@ -1,8 +1,7 @@
-import "./../globals.css";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/shared/app-sidebar";
-
-
+import './../globals.css';
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { AppSidebar } from '@/components/shared/app-sidebar';
+import Header from '@/components/shared/header';
 
 export default function RootLayout({
   children,
@@ -10,16 +9,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang='en'>
       <body>
-        
-      <SidebarProvider>
-      <AppSidebar/>
-      <main>
-        {/* <SidebarTrigger /> */}
-        {children}
-      </main>
-    </SidebarProvider>
+        <SidebarProvider>
+          <AppSidebar />
+          <main className='w-full'>
+            <Header />
+            {children}
+          </main>
+        </SidebarProvider>
       </body>
     </html>
   );
