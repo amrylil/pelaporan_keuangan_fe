@@ -1,24 +1,20 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation'; // Pastikan useRouter di-import jika Anda ingin refresh saat delete
-import { KategoriTransaksi } from '@/lib/api/masterdata';
-import KategoriFormModal from './KategoriFormModal';
-import { deleteKategori } from '@/app/actions/masterdataActions';
-
-// Anda mungkin butuh ikon, misalnya dari lucide-react
-// npm install lucide-react
+import { useRouter } from 'next/navigation';
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
+import { JenisPembayaran } from '@/lib/api/masterdata';
+import { deleteJenisPembayaran } from '@/app/actions/masterdataActions';
+import JenisPembayaranFormModal from './JenisPembayaranModal';
 
-interface KategoriClientProps {
-  data: KategoriTransaksi[];
+interface JenisPembayaranClientProps {
+  data: JenisPembayaran[];
 }
 
-export default function KategoriClient({ data }: KategoriClientProps) {
-  const router = useRouter(); // Dapatkan router untuk refresh saat delete
+export default function JenisPembayaranClient({ data }: JenisPembayaranClientProps) {
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingData, setEditingData] = useState<KategoriTransaksi | null>(null);
-
+  const [editingData, setEditingData] = useState<JenisPembayaran | null>(null);
   const [modalKey, setModalKey] = useState(Date.now());
 
   const handleAddNew = () => {
@@ -27,15 +23,18 @@ export default function KategoriClient({ data }: KategoriClientProps) {
     setModalKey(Date.now());
   };
 
-  const handleEdit = (kategori: KategoriTransaksi) => {
-    setEditingData(kategori);
+  const handleEdit = (jenisPembayaran: JenisPembayaran) => {
+    console.log('Tombol Edit Ditekan. Data yang akan diedit:', jenisPembayaran);
+    console.log('ID yang akan dikirim untuk UPDATE:', jenisPembayaran.id);
+
+    setEditingData(jenisPembayaran);
     setIsModalOpen(true);
     setModalKey(Date.now());
   };
 
   const handleDelete = async (id: string) => {
     if (confirm('Apakah Anda yakin ingin menghapus data ini? Aksi ini tidak dapat dibatalkan.')) {
-      await deleteKategori(id);
+      await deleteJenisPembayaran(id);
       router.refresh();
     }
   };
@@ -51,11 +50,11 @@ export default function KategoriClient({ data }: KategoriClientProps) {
         className='inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-600/90 h-10 px-4 py-2 mb-6'
       >
         <PlusCircle className='mr-2 h-4 w-4' />
-        Tambah Kategori
+        Tambah Jenis Pembayaran
       </button>
 
       {isModalOpen && (
-        <KategoriFormModal
+        <JenisPembayaranFormModal
           key={modalKey}
           isOpen={isModalOpen}
           onClose={closeModal}

@@ -1,18 +1,18 @@
 'use client';
 
 import { useActionState, useEffect } from 'react';
-// [PERBAIKAN] Impor 'useActionState' dari 'react-dom'
 import { useFormStatus } from 'react-dom';
-import { KategoriTransaksi } from '@/lib/api/masterdata';
-import { createKategori, updateKategori } from '@/app/actions/masterdataActions';
+import { useRouter } from 'next/navigation'; // <-- Import useRouter
+import { JenisPembayaran } from '@/lib/api/masterdata';
+import { createJenisPembayaran, updateJenisPembayaran } from '@/app/actions/masterdataActions';
+import { MasterDataFormState } from '@/app/actions/masterdataActions';
 
-interface KategoriFormModalProps {
+interface JenisPembayaranFormModalProps {
   isOpen: boolean;
   onClose: () => void;
-  initialData: KategoriTransaksi | null;
+  initialData: JenisPembayaran | null;
 }
 
-// Komponen Tombol Submit (Tidak ada perubahan)
 function SubmitButton({ isEditing }: { isEditing: boolean }) {
   const { pending } = useFormStatus();
   return (
@@ -26,34 +26,36 @@ function SubmitButton({ isEditing }: { isEditing: boolean }) {
   );
 }
 
-export default function KategoriFormModal({
+export default function JenisPembayaranFormModal({
   isOpen,
   onClose,
   initialData,
-}: KategoriFormModalProps) {
-  // [PERBAIKAN] Gunakan 'useActionState'
-  const [state, formAction] = useActionState(
-    initialData ? updateKategori.bind(null, initialData.id) : createKategori,
+}: JenisPembayaranFormModalProps) {
+  const router = useRouter(); // <-- Panggil hook router
+
+  const [state, formAction] = useActionState<MasterDataFormState, FormData>(
+    initialData ? updateJenisPembayaran.bind(null, initialData.id) : createJenisPembayaran,
     { message: null, errors: {} }
   );
 
   useEffect(() => {
     if (state?.message === 'success') {
       onClose();
+      router.refresh(); // <-- [PERBAIKAN 3] Panggil router.refresh()
     }
-  }, [state, onClose]);
+  }, [state, onClose, router]); // <-- Tambahkan router ke dependencies
 
   if (!isOpen) return null;
 
   return (
     <div
       style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
-      className='fixed inset-0 z-50 flex items-start justify-center bg-black  pt-16'
+      className='fixed inset-0 z-50 flex items-start justify-center pt-16'
     >
       <div className='relative w-full max-w-lg rounded-lg border bg-background shadow-lg'>
         <div className='flex flex-col space-y-1.5 p-6'>
           <h3 className='font-semibold tracking-tight text-2xl'>
-            {initialData ? 'Edit Kategori' : 'Tambah Kategori Baru'}
+            {initialData ? 'Edit Jenis Pembayaran' : 'Tambah Jenis Pembayaran Baru'}
           </h3>
           <p className='text-sm text-muted-foreground'>
             Isi detail di bawah ini. Klik simpan jika sudah selesai.
@@ -64,7 +66,7 @@ export default function KategoriFormModal({
           <div className='p-6 pt-0 space-y-4'>
             <div>
               <label htmlFor='name' className='block text-sm font-medium mb-1'>
-                Nama Kategori
+                Nama Jenis Pembayaran
               </label>
               <input
                 id='name'

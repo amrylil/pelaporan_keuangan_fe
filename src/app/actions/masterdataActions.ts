@@ -1,15 +1,12 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { z } from 'zod';
 
-const API_BASE_URL = 'http://localhost:8000/api/v1'; // <-- GANTI DENGAN URL API ANDA
+// [PERBAIKAN 1] Port API diubah ke 8080
+const API_BASE_URL = 'http://localhost:8000/api/v1';
 
-/**
- * [BARU] Definisikan tipe untuk state form kita.
- * Ini akan digunakan di semua action dan komponen terkait.
- */
-export type KategoriFormState = {
+export type MasterDataFormState = {
   message: string | null;
   errors?: {
     name?: string[];
@@ -17,21 +14,20 @@ export type KategoriFormState = {
   };
 };
 
-// Skema validasi menggunakan Zod
-const KategoriSchema = z.object({
-  name: z.string().min(3, { message: 'Name kategori minimal 3 karakter' }),
+const MasterDataSchema = z.object({
+  name: z.string().min(3, { message: 'Nama minimal 3 karakter' }),
   deskripsi: z.string().optional(),
 });
 
-/**
- * ACTION: Membuat Kategori Transaksi baru.
- * [DIUBAH]: prevState sekarang menggunakan tipe KategoriFormState.
- */
+// ===========================================
+// ACTIONS UNTUK KATEGORI
+// ===========================================
+
 export async function createKategori(
-  prevState: KategoriFormState,
+  prevState: MasterDataFormState,
   formData: FormData
-): Promise<KategoriFormState> {
-  const validatedFields = KategoriSchema.safeParse({
+): Promise<MasterDataFormState> {
+  const validatedFields = MasterDataSchema.safeParse({
     name: formData.get('name'),
     deskripsi: formData.get('deskripsi'),
   });
@@ -52,24 +48,19 @@ export async function createKategori(
 
     if (!response.ok) throw new Error('Gagal membuat data baru.');
 
-    revalidatePath('/master-data/kategori');
+    revalidateTag('kategori'); // Gunakan revalidateTag agar lebih kuat
     return { message: 'success' };
   } catch (error) {
     return { message: 'Terjadi kesalahan di server.' };
   }
 }
 
-/**
- * ACTION: Mengupdate Kategori Transaksi yang sudah ada.
- * [DIUBAH]: prevState sekarang menggunakan tipe KategoriFormState.
- */
 export async function updateKategori(
-  id: number,
-  prevState: KategoriFormState,
+  id: string, // [PERBAIKAN 2] ID HARUS STRING
+  prevState: MasterDataFormState,
   formData: FormData
-): Promise<KategoriFormState> {
-  // <-- Tambahkan return type untuk kejelasan
-  const validatedFields = KategoriSchema.safeParse({
+): Promise<MasterDataFormState> {
+  const validatedFields = MasterDataSchema.safeParse({
     name: formData.get('name'),
     deskripsi: formData.get('deskripsi'),
   });
@@ -88,25 +79,98 @@ export async function updateKategori(
       body: JSON.stringify(validatedFields.data),
     });
 
-    revalidatePath('/master-data/kategori');
+    revalidateTag('kategori');
     return { message: 'success' };
   } catch (error) {
     return { message: 'Terjadi kesalahan saat mengupdate.' };
   }
 }
 
-/**
- * ACTION: Menghapus Kategori Transaksi.
- * (Tidak ada perubahan di sini, karena tidak menggunakan useFormState)
- */
-export async function deleteKategori(id: number) {
+export async function deleteKategori(id: string) {
+  // [PERBAIKAN 2] ID HARUS STRING
   try {
     await fetch(`${API_BASE_URL}/master-data/kategori/${id}`, {
       method: 'DELETE',
     });
-
-    revalidatePath('/master-data/kategori');
+    revalidateTag('kategori');
   } catch (error) {
-    console.error('Gagal menghapus data:', error);
+    console.error('Gagal menghapus data kategori:', error);
+  }
+}
+
+// ===========================================
+// ACTIONS UNTUK JENIS PEMBAYARAN
+// ===========================================
+
+export async function createJenisPembayaran(
+  prevState: MasterDataFormState,
+  formData: FormData
+): Promise<MasterDataFormState> {
+  const validatedFields = MasterDataSchema.safeParse({
+    name: formData.get('name'),
+    deskripsi: formData.get('deskripsi'),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      message: 'Input tidak valid.',
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  try {
+    await fetch(`${API_BASE_URL}/master-data/jenis-pembayaran`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(validatedFields.data),
+    });
+
+    revalidateTag('jenis-pembayaran');
+    return { message: 'success' };
+  } catch (error) {
+    return { message: 'Terjadi kesalahan di server.' };
+  }
+}
+
+export async function updateJenisPembayaran(
+  id: string, // [PERBAIKAN 2] ID HARUS STRING
+  prevState: MasterDataFormState,
+  formData: FormData
+): Promise<MasterDataFormState> {
+  const validatedFields = MasterDataSchema.safeParse({
+    name: formData.get('name'),
+    deskripsi: formData.get('deskripsi'),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      message: 'Input tidak valid.',
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  try {
+    await fetch(`${API_BASE_URL}/master-data/jenis-pembayaran/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(validatedFields.data),
+    });
+
+    revalidateTag('jenis-pembayaran');
+    return { message: 'success' };
+  } catch (error) {
+    return { message: 'Terjadi kesalahan saat mengupdate.' };
+  }
+}
+
+export async function deleteJenisPembayaran(id: string) {
+  // [PERBAIKAN 2] ID HARUS STRING
+  try {
+    await fetch(`${API_BASE_URL}/master-data/jenis-pembayaran/${id}`, {
+      method: 'DELETE',
+    });
+    revalidateTag('jenis-pembayaran');
+  } catch (error) {
+    console.error('Gagal menghapus data jenis pembayaran:', error);
   }
 }

@@ -147,7 +147,7 @@ export function AppSidebar() {
                     asChild
                     className='w-full py-3 px-4 justify-start text-slate-600 hover:text-indigo-600 hover:bg-slate-100 rounded-lg font-medium'
                   >
-                    <a href='/master/jenis-pembayaran'>
+                    <a href='/master_data/jenis-pembayaran'>
                       <Database className='h-5 w-5 md:mr-3' />
                       <span className='hidden md:block'>Jenis Pembayaran</span>
                     </a>
