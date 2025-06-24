@@ -174,3 +174,147 @@ export async function deleteJenisPembayaran(id: string) {
     console.error('Gagal menghapus data jenis pembayaran:', error);
   }
 }
+
+export async function createTipeTransaksi(
+  prevState: MasterDataFormState,
+  formData: FormData
+): Promise<MasterDataFormState> {
+  const validatedFields = MasterDataSchema.safeParse({
+    name: formData.get('name'),
+    deskripsi: formData.get('deskripsi'),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      message: 'Input tidak valid.',
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  try {
+    await fetch(`${API_BASE_URL}/master-data/tipe-transaksi`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(validatedFields.data),
+    });
+
+    revalidateTag('tipe-transaksi');
+    return { message: 'success' };
+  } catch (error) {
+    return { message: 'Terjadi kesalahan di server.' };
+  }
+}
+
+export async function updateTipeTransaksi(
+  id: string,
+  prevState: MasterDataFormState,
+  formData: FormData
+): Promise<MasterDataFormState> {
+  const validatedFields = MasterDataSchema.safeParse({
+    name: formData.get('name'),
+    deskripsi: formData.get('deskripsi'),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      message: 'Input tidak valid.',
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  try {
+    await fetch(`${API_BASE_URL}/master-data/tipe-transaksi/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(validatedFields.data),
+    });
+
+    revalidateTag('tipe-transaksi');
+    return { message: 'success' };
+  } catch (error) {
+    return { message: 'Terjadi kesalahan saat mengupdate.' };
+  }
+}
+
+export async function deleteTipeTransaksi(id: string) {
+  try {
+    await fetch(`${API_BASE_URL}/master-data/tipe-transaksi/${id}`, {
+      method: 'DELETE',
+    });
+    revalidateTag('tipe-transaksi');
+  } catch (error) {
+    console.error('Gagal menghapus data jenis pembayaran:', error);
+  }
+}
+
+export async function createStatusTransaksi(
+  prevState: MasterDataFormState,
+  formData: FormData
+): Promise<MasterDataFormState> {
+  const validatedFields = MasterDataSchema.safeParse({
+    name: formData.get('name'),
+    deskripsi: formData.get('deskripsi'),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      message: 'Input tidak valid.',
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  try {
+    await fetch(`${API_BASE_URL}/master-data/status-transaksi`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(validatedFields.data),
+    });
+
+    revalidateTag('status-transaksi');
+    return { message: 'success' };
+  } catch (error) {
+    return { message: 'Terjadi kesalahan di server.' };
+  }
+}
+
+export async function updateStatusTransaksi(
+  id: string,
+  prevState: MasterDataFormState,
+  formData: FormData
+): Promise<MasterDataFormState> {
+  const validatedFields = MasterDataSchema.safeParse({
+    name: formData.get('name'),
+    deskripsi: formData.get('deskripsi'),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      message: 'Input tidak valid.',
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  try {
+    await fetch(`${API_BASE_URL}/master-data/status-transaksi/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(validatedFields.data),
+    });
+
+    revalidateTag('status-transaksi');
+    return { message: 'success' };
+  } catch (error) {
+    return { message: 'Terjadi kesalahan saat mengupdate.' };
+  }
+}
+
+export async function deleteStatusTransaksi(id: string) {
+  try {
+    await fetch(`${API_BASE_URL}/master-data/status-transaksi/${id}`, {
+      method: 'DELETE',
+    });
+    revalidateTag('status-transaksi');
+  } catch (error) {
+    console.error('Gagal menghapus data jenis pembayaran:', error);
+  }
+}

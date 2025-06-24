@@ -14,6 +14,12 @@ import {
   Wallet,
   ChevronDown,
   ChevronRight,
+  AlignStartVertical,
+  BrickWallFire,
+  Coins,
+  ChartColumnStacked,
+  FileType2,
+  FileChartLine,
 } from 'lucide-react';
 
 import {
@@ -117,7 +123,7 @@ export function AppSidebar() {
             onClick={() => setIsMasterDataCollapsed(!isMasterDataCollapsed)}
           >
             <SidebarGroupLabel className='text-base font-medium text-slate-700 flex items-center'>
-              <Database className='h-5 w-5 mr-2' />
+              <BrickWallFire className='h-5 w-5 mr-2' />
               <span>Master Data</span>
             </SidebarGroupLabel>
             {isMasterDataCollapsed ? (
@@ -136,7 +142,7 @@ export function AppSidebar() {
                     className='w-full py-3 px-4 justify-start text-slate-600 hover:text-indigo-600 hover:bg-slate-100 rounded-lg font-medium'
                   >
                     <a href='/master_data/kategori-transaksi'>
-                      <Database className='h-5 w-5 md:mr-3' />
+                      <ChartColumnStacked className='h-5 w-5 md:mr-3' />
                       <span className='hidden md:block'>Kategori Transaksi</span>
                     </a>
                   </SidebarMenuButton>
@@ -148,7 +154,7 @@ export function AppSidebar() {
                     className='w-full py-3 px-4 justify-start text-slate-600 hover:text-indigo-600 hover:bg-slate-100 rounded-lg font-medium'
                   >
                     <a href='/master_data/jenis-pembayaran'>
-                      <Database className='h-5 w-5 md:mr-3' />
+                      <Coins className='h-5 w-5 md:mr-3' />
                       <span className='hidden md:block'>Jenis Pembayaran</span>
                     </a>
                   </SidebarMenuButton>
@@ -159,8 +165,8 @@ export function AppSidebar() {
                     asChild
                     className='w-full py-3 px-4 justify-start text-slate-600 hover:text-indigo-600 hover:bg-slate-100 rounded-lg font-medium'
                   >
-                    <a href='/master/tipe-transaksi'>
-                      <Database className='h-5 w-5 md:mr-3' />
+                    <a href='/master_data/tipe-transaksi'>
+                      <FileType2 className='h-5 w-5 md:mr-3' />
                       <span className='hidden md:block'>Tipe Transaksi</span>
                     </a>
                   </SidebarMenuButton>
@@ -171,8 +177,8 @@ export function AppSidebar() {
                     asChild
                     className='w-full py-3 px-4 justify-start text-slate-600 hover:text-indigo-600 hover:bg-slate-100 rounded-lg font-medium'
                   >
-                    <a href='/master/status-transaksi'>
-                      <Database className='h-5 w-5 md:mr-3' />
+                    <a href='/master_data/status-transaksi'>
+                      <FileChartLine className='h-5 w-5 md:mr-3' />
                       <span className='hidden md:block'>Status Transaksi</span>
                     </a>
                   </SidebarMenuButton>
